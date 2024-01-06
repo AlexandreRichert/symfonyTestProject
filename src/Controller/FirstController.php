@@ -8,11 +8,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FirstController extends AbstractController
 {
-    #[Route('/first', name: 'app_first')]
+    #[Route('/first', name: 'first')]
     public function index(): Response
     {
         return $this->render('first/index.html.twig', [
-            'controller_name' => 'FirstController',
+            'name' => 'Richert',
+            'firstname' => 'Alexandre'
+        ]);
+    }
+
+    #[Route('/hello', name: 'hello')]
+    public function hello(): Response
+    {
+        $rand = rand(0,2);
+        echo $rand;
+        if ($rand ==2) {
+            return $this -> redirectToRoute('first');# code...
+        }
+        return $this->render('first/hello.html.twig', [
+            'name' => 'Richert',
+            'firstname' => 'Alexandre'
         ]);
     }
 }
