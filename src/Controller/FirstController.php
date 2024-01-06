@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,17 +18,13 @@ class FirstController extends AbstractController
         ]);
     }
 
-    #[Route('/hello', name: 'hello')]
-    public function hello(): Response
+    #[Route('/hello/{firstname}/{name}', name: 'hello')]
+    public function hello(Request $request, $name, $firstname): Response
     {
-        $rand = rand(0,2);
-        echo $rand;
-        if ($rand ==2) {
-            return $this -> redirectToRoute('first');# code...
-        }
+        dd($request);
         return $this->render('first/hello.html.twig', [
-            'name' => 'Richert',
-            'firstname' => 'Alexandre'
+            'nom' => $name,
+            'prenom' => $firstname
         ]);
     }
 }
