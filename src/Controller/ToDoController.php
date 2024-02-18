@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ToDoController extends AbstractController
 {
-    #[Route('/to/do', name: 'app_to_do')]
+    #[Route('/to/do', name: 'to/do')]
     public function index(Request $request): Response
     {
         $session = $request->getSession();
@@ -22,13 +22,28 @@ class ToDoController extends AbstractController
                 'correction' => 'corriger les exercices'
             ];
             $session->set('todo', $todo);
+            $this->addFlash(type: 'info', message: "La liste des todos vient d'être initialisée.");
         }
         return $this->render('to_do/index.html.twig');
     }
 
-    #[Route('/to/do/{name}/{content}', name: 'todo_add')]
-    public function addTodo(Request $request, $name, $content): 
+    #[Route('/to/do/add/{name}/{content}', name: 'todo_add')]
+    public function addTodo(Request $request, $name, $content)
     {
-        
+        $session = $request->getSession();
+        if ($session->has('todo')) {
+            $todo = $session->get('todo');
+            if (isset($todo[$name])) {
+                $this->addFlash(type: 'error', message: "Le todo $name existe déjà.");
+            } else {
+                $todo[$name] = $content;
+                $session->set('todo', $todo);
+                $this->addFlash(type: 'success', message: "Le todo $name a bien été ajouté.");
+            }
+        } else {
+            $this->addFlash(type: 'error', message: "La liste des todos n'est pas encore initialisée.");
+        }
+
+        return $this->redirectToRoute(route: 'to/do');
     }
 }
